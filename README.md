@@ -50,44 +50,53 @@ This project is a high-concurrency polling system leveraging **Kafka**, **Zookee
    cd polling-system
 
 
+# **Setup and Execution Guide**
 
-Configure Environment Variables:
+This guide provides step-by-step instructions for setting up, configuring, and testing the polling system with Kafka, Zookeeper, PostgreSQL, and WebSockets.
 
-Create a .env file in the root directory.
-Use the provided .env.sample file as a reference.
-Update Zookeeper Properties:
+---
 
-Modify the zookeeper.properties file with the following:
-properties
-Copy code
-tickTime=2000
-dataDir=/var/lib/zookeeper
-clientPort=2181
-initLimit=5
-syncLimit=2
-Build and Start Containers:
+## **1. Configure Environment Variables**
 
-Run the following command:
-bash
-Copy code
+1. Create a `.env` file in the root directory.
+2. Use the provided `.env.sample` file as a reference for required variables.
+
+---
+
+## **2. Update Zookeeper Properties**
+
+1. Locate the `zookeeper.properties` file in the Kafka configuration.
+2. Modify the file with the following settings:
+   ```properties
+   tickTime=2000
+   dataDir=/var/lib/zookeeper
+   clientPort=2181
+   initLimit=5
+   syncLimit=2
+
+
+3. Build and Start Containers
+Open a terminal in the project directory.
+Run the following command to build and start all services:
 docker-compose up --build
-Access the Application:
-
+4. Access the Application
+Once the services are running, you can access the following:
 API Base URL: http://localhost:5000
 PgAdmin: http://localhost:5050
 Email: admin@example.com
 Password: admin
-Test WebSocket Connectivity:
+5. Test WebSocket Connectivity
+Use a WebSocket client like wscat to test connectivity.
+Install wscat globally if not already installed:
 
-Use a WebSocket client like wscat:
-bash
-Copy code
+npm install -g wscat
+Connect to the WebSocket server:
+
 wscat -c ws://localhost:5000
-API Endpoints
-Poll Management
-Create a Poll:
-
-POST /api/polls
+6. API Endpoints
+6.1 Poll Management
+Create a Poll
+Endpoint: POST /api/polls
 Request Body:
 json
 Copy code
@@ -95,25 +104,23 @@ Copy code
   "question": "What is your favorite programming language?",
   "options": ["JavaScript", "Python", "Java"]
 }
-Vote on a Poll:
-
-POST /api/polls/{id}/vote
+Vote on a Poll
+Endpoint: POST /api/polls/{id}/vote
 Request Body:
 json
 Copy code
 {
   "option": "JavaScript"
 }
-Get Poll Results:
-
-GET /api/polls/{id}
-Leaderboard:
-
-GET /api/leaderboard
-Environment Variables
+Get Poll Results
+Endpoint: GET /api/polls/{id}
+Leaderboard
+Endpoint: GET /api/leaderboard
+7. Environment Variables
+7.1 Create a .env File
 Create a .env file in the root directory.
-Refer to the .env.sample file for the required keys.
-Sample .env.sample
+Define the necessary variables as per the .env.sample file.
+7.2 Sample .env.sample File
 env
 Copy code
 # PostgreSQL Database Configuration
@@ -128,23 +135,14 @@ KAFKA_BROKER=kafka:9092
 
 # Server Configuration
 PORT=5000
-Testing Instructions
-Test API Endpoints:
-
-Use Postman or curl for testing.
+8. Testing Instructions
+8.1 Test API Endpoints
+Use Postman or curl to test the endpoints.
 Example for creating a poll:
-bash
-Copy code
+
 curl -X POST http://localhost:5000/api/polls \
 -H "Content-Type: application/json" \
 -d '{"question":"What is your favorite programming language?", "options":["JavaScript", "Python"]}'
-Test WebSocket Communication:
-
-Install wscat:
-bash
-Copy code
-npm install -g wscat
-Connect to the WebSocket server:
-bash
-Copy code
+8.2 Test WebSocket Communication
+Use a WebSocket client like wscat:
 wscat -c ws://localhost:5000
